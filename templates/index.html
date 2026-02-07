@@ -15,6 +15,13 @@
       background: #0a0a0f;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #e0e0e0;
+      perspective: 800px;
+    }
+
+    .card-container {
+      max-width: 480px;
+      width: 90%;
+      position: relative;
     }
 
     .card {
@@ -22,18 +29,30 @@
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 20px;
       padding: 48px 40px;
-      max-width: 480px;
-      width: 90%;
       box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.6),
         0 0 80px rgba(100, 60, 255, 0.05);
       text-align: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .card.hidden {
+      opacity: 0;
+      transform: scale(0.95);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .badge {
       display: inline-block;
-      background: rgba(255, 200, 60, 0.12);
-      color: #ffc83c;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 2px;
@@ -43,11 +62,29 @@
       margin-bottom: 24px;
     }
 
+    .badge-poll {
+      background: rgba(255, 200, 60, 0.12);
+      color: #ffc83c;
+    }
+
+    .badge-results {
+      background: rgba(76, 175, 80, 0.12);
+      color: #66bb6a;
+    }
+
     h1 {
       font-size: 24px;
       font-weight: 700;
       line-height: 1.4;
       margin-bottom: 36px;
+      color: #ffffff;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 32px;
       color: #ffffff;
     }
 
@@ -80,15 +117,10 @@
     .vote-btn.no:hover { border-color: #ef5350; color: #ef5350; }
     .vote-btn.not-sure:hover { border-color: #ffc83c; color: #ffc83c; }
 
-    .results {
-      display: none;
+    .result-rows {
+      display: flex;
       flex-direction: column;
       gap: 20px;
-      margin-top: 8px;
-    }
-
-    .results.show {
-      display: flex;
     }
 
     .result-row {
@@ -124,40 +156,54 @@
     .total-votes {
       font-size: 13px;
       color: #888;
-      margin-top: 8px;
+      margin-top: 24px;
+    }
+
+    .thank-you {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 28px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="badge">Live Poll</div>
-    <h1>Should high school athletes be allowed to sign NIL deals?</h1>
+  <div class="card-container">
 
-    <div class="buttons" id="buttons">
-      <button class="vote-btn yes" onclick="vote('yes')">Yes</button>
-      <button class="vote-btn no" onclick="vote('no')">No</button>
-      <button class="vote-btn not-sure" onclick="vote('not_sure')">Not Sure</button>
+    <div class="card visible" id="vote-card">
+      <div class="badge badge-poll">Live Poll</div>
+      <h1>Should high school athletes be allowed to sign NIL deals?</h1>
+      <div class="buttons">
+        <button class="vote-btn yes" onclick="vote('yes')">Yes</button>
+        <button class="vote-btn no" onclick="vote('no')">No</button>
+        <button class="vote-btn not-sure" onclick="vote('not_sure')">Not Sure</button>
+      </div>
     </div>
 
-    <div class="results" id="results">
-      <div class="result-row">
-        <div class="result-label"><span>Yes</span><span id="pct-yes">0%</span></div>
-        <div class="result-bar-bg"><div class="result-bar yes" id="bar-yes"></div></div>
-      </div>
-      <div class="result-row">
-        <div class="result-label"><span>No</span><span id="pct-no">0%</span></div>
-        <div class="result-bar-bg"><div class="result-bar no" id="bar-no"></div></div>
-      </div>
-      <div class="result-row">
-        <div class="result-label"><span>Not Sure</span><span id="pct-not-sure">0%</span></div>
-        <div class="result-bar-bg"><div class="result-bar not-sure" id="bar-not-sure"></div></div>
+    <div class="card hidden" id="results-card">
+      <div class="badge badge-results">Results</div>
+      <h2>Current Results</h2>
+      <p class="thank-you">Thanks for voting!</p>
+      <div class="result-rows">
+        <div class="result-row">
+          <div class="result-label"><span>Yes</span><span id="pct-yes">0%</span></div>
+          <div class="result-bar-bg"><div class="result-bar yes" id="bar-yes"></div></div>
+        </div>
+        <div class="result-row">
+          <div class="result-label"><span>No</span><span id="pct-no">0%</span></div>
+          <div class="result-bar-bg"><div class="result-bar no" id="bar-no"></div></div>
+        </div>
+        <div class="result-row">
+          <div class="result-label"><span>Not Sure</span><span id="pct-not-sure">0%</span></div>
+          <div class="result-bar-bg"><div class="result-bar not-sure" id="bar-not-sure"></div></div>
+        </div>
       </div>
       <div class="total-votes"><span id="total">0</span> total votes</div>
     </div>
+
   </div>
 
   <script>
-    let hasVoted = false;
+    let refreshTimer = null;
 
     function vote(choice) {
       fetch('/vote', {
@@ -167,17 +213,20 @@
       })
       .then(r => r.json())
       .then(data => {
-        hasVoted = true;
-        document.getElementById('buttons').style.display = 'none';
-        showResults(data);
-        startAutoRefresh();
+        document.getElementById('vote-card').classList.remove('visible');
+        document.getElementById('vote-card').classList.add('hidden');
+
+        setTimeout(() => {
+          const resultsCard = document.getElementById('results-card');
+          resultsCard.classList.remove('hidden');
+          resultsCard.classList.add('visible');
+          updateBars(data);
+          startSmartRefresh();
+        }, 400);
       });
     }
 
-    function showResults(data) {
-      const el = document.getElementById('results');
-      el.classList.add('show');
-
+    function updateBars(data) {
       document.getElementById('pct-yes').textContent = data.yes + '%';
       document.getElementById('pct-no').textContent = data.no + '%';
       document.getElementById('pct-not-sure').textContent = data.not_sure + '%';
@@ -190,12 +239,22 @@
       }, 50);
     }
 
-    function startAutoRefresh() {
-      setInterval(() => {
+    function startSmartRefresh() {
+      if (refreshTimer) return;
+      refreshTimer = setInterval(() => {
+        if (document.hidden) return;
         fetch('/results')
           .then(r => r.json())
-          .then(data => showResults(data));
+          .then(data => updateBars(data));
       }, 5000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          fetch('/results')
+            .then(r => r.json())
+            .then(data => updateBars(data));
+        }
+      });
     }
   </script>
 </body>
