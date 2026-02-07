@@ -157,6 +157,8 @@
   </div>
 
   <script>
+    let hasVoted = false;
+
     function vote(choice) {
       fetch('/vote', {
         method: 'POST',
@@ -165,8 +167,10 @@
       })
       .then(r => r.json())
       .then(data => {
+        hasVoted = true;
         document.getElementById('buttons').style.display = 'none';
         showResults(data);
+        startAutoRefresh();
       });
     }
 
@@ -184,6 +188,14 @@
         document.getElementById('bar-no').style.width = data.no + '%';
         document.getElementById('bar-not-sure').style.width = data.not_sure + '%';
       }, 50);
+    }
+
+    function startAutoRefresh() {
+      setInterval(() => {
+        fetch('/results')
+          .then(r => r.json())
+          .then(data => showResults(data));
+      }, 5000);
     }
   </script>
 </body>
