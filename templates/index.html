@@ -365,6 +365,13 @@
       </div>
       <div class="total-votes"><span id="total">0</span> total votes</div>
       <button class="share-why-btn" onclick="showCommentCard()">Share Your Why</button>
+
+      <div class="feed-section">
+        <div class="feed-title">Live Comments</div>
+        <div class="feed" id="results-feed">
+          <div class="empty-feed">No comments yet.</div>
+        </div>
+      </div>
     </div>
 
     <div class="card hidden" id="comment-card">
@@ -389,7 +396,7 @@
 
       <div class="feed-section">
         <div class="feed-title">Live Comments</div>
-        <div class="feed" id="feed">
+        <div class="feed" id="comment-feed">
           <div class="empty-feed">No comments yet. Be the first!</div>
         </div>
       </div>
@@ -450,13 +457,16 @@
 
     function startSmartRefresh() {
       if (refreshTimer) return;
+      loadComments();
       refreshTimer = setInterval(() => {
         if (document.hidden) return;
         fetch('/results').then(r => r.json()).then(data => updateBars(data));
+        loadComments();
       }, 5000);
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
           fetch('/results').then(r => r.json()).then(data => updateBars(data));
+          loadComments();
         }
       });
     }
@@ -509,25 +519,31 @@
           return r.json();
         })
         .then(comments => {
-          const feed = document.getElementById('feed');
-          if (comments.length === 0) {
-            feed.innerHTML = '<div class="empty-feed">No comments yet. Be the first!</div>';
-            return;
-          }
-          feed.innerHTML = comments.map(c => {
-            const tagClass = c.vote === 'Yes' ? 'tag-yes' : (c.vote === 'No' ? 'tag-no' : 'tag-not-sure');
-            return `
-              <div class="comment-item">
-                <div class="comment-header">
-                  <span class="comment-author">${esc(c.first_name)}</span>
-                  <span class="comment-vote-tag ${tagClass}">${esc(c.vote)}</span>
-                </div>
-                <div class="comment-text">${esc(c.comment)}</div>
-                <div class="comment-meta">${esc(c.state)} &middot; ${esc(c.time)}</div>
-              </div>`;
-          }).join('');
+          const html = buildCommentsHTML(comments);
+          const resultsFeed = document.getElementById('results-feed');
+          const commentFeed = document.getElementById('comment-feed');
+          if (resultsFeed) resultsFeed.innerHTML = html;
+          if (commentFeed) commentFeed.innerHTML = html;
         })
         .catch(() => {});
+    }
+
+    function buildCommentsHTML(comments) {
+      if (comments.length === 0) {
+        return '<div class="empty-feed">No comments yet. Be the first!</div>';
+      }
+      return comments.map(c => {
+        const tagClass = c.vote === 'Yes' ? 'tag-yes' : (c.vote === 'No' ? 'tag-no' : 'tag-not-sure');
+        return `
+          <div class="comment-item">
+            <div class="comment-header">
+              <span class="comment-author">${esc(c.first_name)}</span>
+              <span class="comment-vote-tag ${tagClass}">${esc(c.vote)}</span>
+            </div>
+            <div class="comment-text">${esc(c.comment)}</div>
+            <div class="comment-meta">${esc(c.state)} &middot; ${esc(c.time)}</div>
+          </div>`;
+      }).join('');
     }
 
     function startCommentRefresh() {
