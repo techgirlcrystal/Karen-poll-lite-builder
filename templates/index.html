@@ -15,12 +15,12 @@
       background: #0a0a0f;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #e0e0e0;
-      perspective: 800px;
+      padding: 20px;
     }
 
     .card-container {
-      max-width: 480px;
-      width: 90%;
+      max-width: 520px;
+      width: 100%;
       position: relative;
     }
 
@@ -28,7 +28,7 @@
       background: linear-gradient(145deg, #141420, #1a1a2e);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 20px;
-      padding: 48px 40px;
+      padding: 44px 36px;
       box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.6),
         0 0 80px rgba(100, 60, 255, 0.05);
@@ -40,9 +40,7 @@
       opacity: 0;
       transform: scale(0.95);
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       pointer-events: none;
     }
 
@@ -62,15 +60,9 @@
       margin-bottom: 24px;
     }
 
-    .badge-poll {
-      background: rgba(255, 200, 60, 0.12);
-      color: #ffc83c;
-    }
-
-    .badge-results {
-      background: rgba(76, 175, 80, 0.12);
-      color: #66bb6a;
-    }
+    .badge-poll { background: rgba(255, 200, 60, 0.12); color: #ffc83c; }
+    .badge-results { background: rgba(76, 175, 80, 0.12); color: #66bb6a; }
+    .badge-comments { background: rgba(100, 140, 255, 0.12); color: #648cff; }
 
     h1 {
       font-size: 24px;
@@ -84,7 +76,7 @@
       font-size: 20px;
       font-weight: 700;
       line-height: 1.4;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       color: #ffffff;
     }
 
@@ -123,9 +115,7 @@
       gap: 20px;
     }
 
-    .result-row {
-      text-align: left;
-    }
+    .result-row { text-align: left; }
 
     .result-label {
       display: flex;
@@ -157,12 +147,187 @@
       font-size: 13px;
       color: #888;
       margin-top: 24px;
+      margin-bottom: 24px;
+    }
+
+    .share-why-btn {
+      padding: 14px 28px;
+      border: 1px solid rgba(100, 140, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(100, 140, 255, 0.08);
+      color: #648cff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .share-why-btn:hover {
+      background: rgba(100, 140, 255, 0.15);
+      border-color: rgba(100, 140, 255, 0.5);
+      transform: translateY(-2px);
     }
 
     .thank-you {
       font-size: 14px;
       color: #aaa;
       margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      color: #e0e0e0;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: rgba(100, 140, 255, 0.4);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .form-row .form-group { flex: 1; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #648cff, #5a5fff);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(100, 140, 255, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .feed-section {
+      margin-top: 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 24px;
+    }
+
+    .feed-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+
+    .feed {
+      max-height: 360px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .feed::-webkit-scrollbar { width: 4px; }
+    .feed::-webkit-scrollbar-track { background: transparent; }
+    .feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    .comment-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: left;
+      transition: border-color 0.2s ease;
+    }
+
+    .comment-item:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .comment-author {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .comment-vote-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-yes { background: rgba(76, 175, 80, 0.15); color: #66bb6a; }
+    .tag-no { background: rgba(239, 83, 80, 0.15); color: #ef5350; }
+    .tag-not-sure { background: rgba(255, 200, 60, 0.15); color: #ffc83c; }
+
+    .comment-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #ccc;
+      margin-bottom: 6px;
+    }
+
+    .comment-meta {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .empty-feed {
+      color: #555;
+      font-size: 14px;
+      padding: 20px 0;
     }
   </style>
 </head>
@@ -173,9 +338,9 @@
       <div class="badge badge-poll">Live Poll</div>
       <h1>Should high school athletes be allowed to sign NIL deals?</h1>
       <div class="buttons">
-        <button class="vote-btn yes" onclick="vote('yes')">Yes</button>
-        <button class="vote-btn no" onclick="vote('no')">No</button>
-        <button class="vote-btn not-sure" onclick="vote('not_sure')">Not Sure</button>
+        <button class="vote-btn yes" onclick="castVote('yes')">Yes</button>
+        <button class="vote-btn no" onclick="castVote('no')">No</button>
+        <button class="vote-btn not-sure" onclick="castVote('not_sure')">Not Sure</button>
       </div>
     </div>
 
@@ -198,14 +363,46 @@
         </div>
       </div>
       <div class="total-votes"><span id="total">0</span> total votes</div>
+      <button class="share-why-btn" onclick="showCommentCard()">Share Your Why</button>
+    </div>
+
+    <div class="card hidden" id="comment-card">
+      <div class="badge badge-comments">Share Your Why</div>
+      <h2>Why did you vote <span id="user-vote-label" style="color:#648cff"></span>?</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="fname" placeholder="John" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" id="state" placeholder="Texas" maxlength="50">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Comment</label>
+        <textarea id="comment" placeholder="Tell us why..." maxlength="500"></textarea>
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="submitComment()">Submit</button>
+
+      <div class="feed-section">
+        <div class="feed-title">Live Comments</div>
+        <div class="feed" id="feed">
+          <div class="empty-feed">No comments yet. Be the first!</div>
+        </div>
+      </div>
     </div>
 
   </div>
 
   <script>
+    let userVote = '';
     let refreshTimer = null;
+    let commentTimer = null;
 
-    function vote(choice) {
+    function castVote(choice) {
+      userVote = choice;
       fetch('/vote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -213,17 +410,29 @@
       })
       .then(r => r.json())
       .then(data => {
-        document.getElementById('vote-card').classList.remove('visible');
-        document.getElementById('vote-card').classList.add('hidden');
-
-        setTimeout(() => {
-          const resultsCard = document.getElementById('results-card');
-          resultsCard.classList.remove('hidden');
-          resultsCard.classList.add('visible');
-          updateBars(data);
-          startSmartRefresh();
-        }, 400);
+        switchCard('vote-card', 'results-card');
+        updateBars(data);
+        startSmartRefresh();
       });
+    }
+
+    function showCommentCard() {
+      const labels = { yes: 'Yes', no: 'No', not_sure: 'Not Sure' };
+      document.getElementById('user-vote-label').textContent = labels[userVote];
+      switchCard('results-card', 'comment-card');
+      loadComments();
+      startCommentRefresh();
+    }
+
+    function switchCard(hideId, showId) {
+      const hideEl = document.getElementById(hideId);
+      const showEl = document.getElementById(showId);
+      hideEl.classList.remove('visible');
+      hideEl.classList.add('hidden');
+      setTimeout(() => {
+        showEl.classList.remove('hidden');
+        showEl.classList.add('visible');
+      }, 400);
     }
 
     function updateBars(data) {
@@ -231,7 +440,6 @@
       document.getElementById('pct-no').textContent = data.no + '%';
       document.getElementById('pct-not-sure').textContent = data.not_sure + '%';
       document.getElementById('total').textContent = data.total;
-
       setTimeout(() => {
         document.getElementById('bar-yes').style.width = data.yes + '%';
         document.getElementById('bar-no').style.width = data.no + '%';
@@ -243,18 +451,78 @@
       if (refreshTimer) return;
       refreshTimer = setInterval(() => {
         if (document.hidden) return;
-        fetch('/results')
-          .then(r => r.json())
-          .then(data => updateBars(data));
+        fetch('/results').then(r => r.json()).then(data => updateBars(data));
       }, 5000);
-
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
-          fetch('/results')
-            .then(r => r.json())
-            .then(data => updateBars(data));
+          fetch('/results').then(r => r.json()).then(data => updateBars(data));
         }
       });
+    }
+
+    function submitComment() {
+      const fname = document.getElementById('fname').value.trim();
+      const state = document.getElementById('state').value.trim();
+      const comment = document.getElementById('comment').value.trim();
+      const btn = document.getElementById('submit-btn');
+
+      if (!fname || !state || !comment) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      fetch('/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ first_name: fname, state, comment, vote: userVote })
+      })
+      .then(r => r.json())
+      .then(() => {
+        document.getElementById('fname').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('comment').value = '';
+        btn.disabled = false;
+        btn.textContent = 'Submit';
+        loadComments();
+      });
+    }
+
+    function loadComments() {
+      fetch('/comments')
+        .then(r => r.json())
+        .then(comments => {
+          const feed = document.getElementById('feed');
+          if (comments.length === 0) {
+            feed.innerHTML = '<div class="empty-feed">No comments yet. Be the first!</div>';
+            return;
+          }
+          feed.innerHTML = comments.map(c => {
+            const tagClass = c.vote === 'Yes' ? 'tag-yes' : (c.vote === 'No' ? 'tag-no' : 'tag-not-sure');
+            return `
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">${esc(c.first_name)}</span>
+                  <span class="comment-vote-tag ${tagClass}">${esc(c.vote)}</span>
+                </div>
+                <div class="comment-text">${esc(c.comment)}</div>
+                <div class="comment-meta">${esc(c.state)} &middot; ${esc(c.time)}</div>
+              </div>`;
+          }).join('');
+        });
+    }
+
+    function startCommentRefresh() {
+      if (commentTimer) return;
+      commentTimer = setInterval(() => {
+        if (document.hidden) return;
+        loadComments();
+      }, 5000);
+    }
+
+    function esc(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
     }
   </script>
 </body>
